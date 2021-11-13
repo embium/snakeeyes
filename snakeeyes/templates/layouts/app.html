@@ -1,0 +1,97 @@
+{% extends 'layouts/base.html' %}
+
+{% block header %}
+  <nav class="navbar navbar-expand-md navbar-light bg-light mb-5">
+    <div class="container">
+      <a href="{{ url_for('page.home') }}">
+        <img src="{{ static_url_for('static', filename='images/snake-eyes.jpg') }}"
+             class="img-fluid"
+             width="229" height="50" title="Snake Eyes" alt="Snake Eyes"/>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse"
+              data-target="#navbarCollapse"
+              aria-controls="navbarCollapse"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          {% if current_user.is_authenticated %}
+            {% if current_user.coins == 0 %}
+            <li class="nav-item">
+              <a class="nav-link" href="#coming-soon">
+                <span class="badge badge-primary">Buy Coins</span>
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('bet.place_bet') }}">
+                <span class="badge badge-primary">Place Bet</span>
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span class="badge badge-secondary">Leaderboard</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('billing.pricing') }}">
+                <span class="badge badge-primary">Pricing</span>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav">
+          {% if current_user.role == 'admin' %}
+            <li>
+              {% include 'admin/_menu.html' %}
+            </li>
+          {% endif %}
+          {% if current_user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle"
+                 data-toggle="dropdown"
+                 role="button" aria-haspopup="true"
+                 aria-expanded="false">Account
+                <span class="caret"></span></a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item "href="{{ url_for('user.settings') }}">
+                  Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url_for('user.logout') }}">
+                  Log out
+                </a>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.login') }}">
+                Log in
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.signup') }}">
+                Sign up
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block footer %}
+  <li class="list-inline-item">
+    <a href="{{ url_for('contact.index') }}">Contact</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+  </li>
+{% endblock %}

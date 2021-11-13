@@ -1,0 +1,62 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Sign up for a new account{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="mt-2 mb-5">What are you waiting for?</h2>
+        <div class="media">
+          <i class="fas fa-fw fa-3x fa-bullhorn text-primary mr-2"></i>
+          <div class="media-body">
+            <h4 class="mt-0">Place bets</h4>
+            <p class="text-muted">Correctly guess the dice's roll.</p>
+          </div>
+        </div>
+        <div class="media mt-3">
+          <i class="fas fa-fw fa-3x fa-database text-primary mr-2"></i>
+          <div class="media-body">
+            <h4 class="mt-0">Win currency</h4>
+            <p class="text-muted">Gain coins if your guess is correct.</p>
+          </div>
+        </div>
+        <div class="media mt-3">
+          <i class="fas fa-fw fa-3x fa-trophy text-primary mr-2"></i>
+          <div class="media-body">
+            <h4 class="mt-0">Leaderboard</h4>
+            <p class="text-muted">Compare your results to others.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 card bg-light">
+        {% call f.form_tag('user.signup') %}
+          <h2 class="mt-2 mb-4">Sign up today</h1>
+
+          {% call f.form_group(form.email,
+                               autofocus='autofocus',
+                               placeholder='Email address') %}
+          {% endcall %}
+
+          {% call f.form_group(form.password) %}
+          {% endcall %}
+
+          <div class="row">
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-primary btn-block">
+                Register
+              </button>
+            </div>
+            <div class="col-md-6">
+              <a href="{{ url_for('user.login') }}"
+                 class="btn btn-outline-secondary btn-block">
+                Sign in
+              </a>
+            </div>
+          </div>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

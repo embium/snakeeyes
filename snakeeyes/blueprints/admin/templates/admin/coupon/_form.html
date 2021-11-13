@@ -1,0 +1,80 @@
+{% import 'macros/form.html' as f with context %}
+
+{% if request.endpoint.endswith('new') %}
+  {% set endpoint = 'admin.coupons_new' %}
+  {% set form_kwargs = {} %}
+  {% set legend = 'Add a new coupon' %}
+  {% set button = 'Add' %}
+{% else %}
+  {% set endpoint = 'admin.coupons_edit' %}
+  {% set form_kwargs = {'id': coupon.id} %}
+  {% set legend = 'Update this coupon' %}
+  {% set button = 'Save' %}
+{% endif %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 offset-md-4 card bg-light">
+      {% call f.form_tag(endpoint, **form_kwargs) %}
+        <h2 class="mb-4">
+          {{ legend }}<br/>
+          <span class="h5 text-muted">
+            Pick either a percent <strong>or</strong> amount off
+          </span>
+        </h2>
+
+        <div class="row margin-bottom">
+          <div class="col-md-6">
+            {% call f.form_group(form.percent_off) %}{% endcall %}
+          </div>
+          <div class="col-md-6">
+            {% call f.form_group(form.amount_off) %}{% endcall %}
+          </div>
+        </div>
+
+        <hr>
+
+        {% call f.form_group(form.code, css_class='text-uppercase') %}{% endcall %}
+
+        {% call f.form_group(form.currency) %}{% endcall %}
+
+        {% call f.form_group(form.duration) %}{% endcall %}
+
+        <div id="duration_in_months_wrapper">
+          {% call f.form_group(form.duration_in_months) %}
+          {% endcall %}
+        </div>
+
+        {% call f.form_group(form.max_redemptions) %}{% endcall %}
+
+        {{ f.field_label(form.redeem_by) }}
+        <div class="input-group mb-3">
+          {{ f.field(form.redeem_by) }}
+          <div class="input-group-append">
+            <div class="input-group-text js-redeem-by-clear">
+              <i class="fas fa fa-fw fa-times"></i>
+            </div>
+          </div>
+        </div>
+        {{ f.field_errors(form.redeem_by) }}
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-primary btn-block">
+              <img src="{{ static_url_for('static', filename='images/spinner.gif') }}"
+                  class="spinner"
+                  width="16" height="11" alt="Spinner"/>
+              {{ button }}
+            </button>
+          </div>
+          <div class="col-md-6">
+            <a href="{{ url_for('admin.coupons') }}"
+                class="btn btn-outline-secondary btn-block">
+              Cancel
+            </a>
+          </div>
+        </div>
+      {% endcall %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}You are about to cancel your subscription{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 card">
+
+        {% call f.form_tag('billing.cancel') %}
+          <h2 class="mt-2 mb-4">Cancel subscription</h2>
+          <p class="lead">
+            <strong>Hi {{ current_user.name }}</strong>,<br/>
+            Before you cancel your account, please read the following:
+          </p>
+          <ul class="mb-5">
+            <li>You will no longer be billed</li>
+            <li>You will lose access to the leaderboard</li>
+            <li>Your account <strong>will</strong> remain open</li>
+            <li>You may subscribe again in the future</li>
+          </ul>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-primary btn-block">
+                <img src="{{ static_url_for('static', filename='images/spinner.gif') }}"
+                     class="spinner"
+                     width="16" height="11" alt="Spinner"/>
+                Cancel it
+              </button>
+            </div>
+            <div class="col-md-6">
+              <a href="{{ url_for('user.settings') }}"
+                 class="btn btn-outline-secondary btn-block">
+                Nevermind
+              </a>
+            </div>
+          </div>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

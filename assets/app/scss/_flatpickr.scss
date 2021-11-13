@@ -1,0 +1,6 @@
+.flatpickr-day {
+  &.selected, &.selected:hover {
+    background-color: $primary;
+    border-color: darken($primary, 10%);
+  }
+}

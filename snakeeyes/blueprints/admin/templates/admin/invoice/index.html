@@ -1,0 +1,96 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+{% import 'macros/form.html' as f with context %}
+{% import 'macros/user.html' as account %}
+
+{% block title %}Admin - Invoices / List{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {{ f.search('admin.invoices') }}
+
+        {% if invoices.total == 0 %}
+          <h3>No results found</h3>
+
+          {% if request.args.get('q') %}
+            <p>Try limiting or removing your search terms.</p>
+          {% else %}
+            <p>There are no invoices present, you should market your service.</p>
+          {% endif %}
+        {% else %}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th class="js-col-header">
+                  {{ items.sort('created_on', 'Date') }}
+                </th>
+                <th class="js-col-header">
+                  {{ items.sort('user_id', 'User') }}
+                </th>
+                <th class="js-col-header">
+                  {{ items.sort('description', 'Description') }}
+                </th>
+                <th class="js-col-header">
+                  {{ items.sort('period_start_on', 'Service period') }}
+                </th>
+                <th class="js-col-header">
+                  {{ items.sort('tax', 'Tax') }}
+                </th>
+                <th class="js-col-header">
+                  {{ items.sort('total', 'Total') }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for invoice in invoices.items %}
+              <tr>
+                <td>
+                  <time class="js-from-now"
+                        data-datetime="{{ invoice.created_on }}">
+                    {{ invoice.created_on }}
+                  </time>
+                </td>
+                <td>
+                  <a class="no-underline"
+                     href="{{ url_for('admin.users_edit', id=invoice.user.id) }}">
+                    <div class="media">
+                      {{ account.role_icon_for(invoice.user) }}
+                      <div class="media-body">
+                        <h5 class="mt-0 mb-1">{{ invoice.user.username }}</h5>
+                        <p class="text-muted mb-1">{{ invoice.user.email }}</p>
+                      </div>
+                    </div>
+                  </a>
+                </td>
+                <td class="small">
+                  {{ invoice.brand }} {{ invoice.last4 }}
+                  <br/>
+                  <span class="text-muted">{{ invoice.description }}</span>
+                </td>
+                <td>
+                  <time class="js-short-date" data-datetime="{{ invoice.period_start_on }}">
+                    {{ invoice.period_start_on }}
+                  </time>
+                  <span class="text-info">&mdash;</span>
+                  <time class="js-short-date" data-datetime="{{ invoice.period_end_on }}">
+                    {{ invoice.period_end_on }}
+                  </time>
+                </td>
+                <td title="{{ (invoice.tax_percent | round(2)) | string + '%' if invoice.tax_percent }}">
+                  {{ '$' + invoice.tax | format_currency if invoice.tax }}
+                </td>
+                <td title="{{ invoice.currency }}">
+                  ${{ invoice.total | format_currency }}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          {{ items.paginate(invoices) }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

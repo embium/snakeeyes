@@ -1,0 +1,32 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Update your language settings{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 card bg-light">
+        {% call f.form_tag('user.update_locale') %}
+          <h2 class="mt-2 mb-4">Update locale settings</h2>
+
+          {% call f.form_group(form.locale) %}{% endcall %}
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-primary btn-block">
+                Save
+              </button>
+            </div>
+            <div class="col-md-6">
+              <a href="{{ url_for('user.settings') }}"
+                 class="btn btn-outline-secondary btn-block">
+                Nevermind
+              </a>
+            </div>
+          </div>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

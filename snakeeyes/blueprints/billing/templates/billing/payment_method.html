@@ -1,0 +1,42 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+{% import 'billing/macros/billing.html' as billing %}
+
+{% set plan_name = request.args.get('plan', '') %}
+{% set is_create = request.endpoint.endswith('create') %}
+{% if is_create %}
+  {% set title = _('Enter credit card') %}
+  {% set endpoint = 'billing.create' %}
+  {% set button = _('Process payment') %}
+{% else %}
+  {% set title = _('Update credit card') %}
+  {% set endpoint = 'billing.update_payment_method' %}
+  {% set button = _('Update payment method') %}
+{% endif %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 offset-md-4 card bg-light">
+        {% call f.form_tag(endpoint, fid='payment_form') %}
+          <h2 class="mb-4">
+            {% if is_create %}
+              {{ plan_name | title }} {{ _('subscription') }}<br/>
+              <span class="h5 text-muted">
+                {{ _('This plan costs') }}
+                $<span class="js-payment-amount" data-amount="{{ plan.amount }}">{{ plan.amount | format_currency }}</span>
+                / {{ plan.interval }}
+              </span>
+            {% else %}
+              {{ title }}
+            {% endif %}
+          </h2>
+
+          {{ billing.payment_form(form, button, is_create) }}
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
